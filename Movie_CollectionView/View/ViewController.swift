@@ -15,13 +15,21 @@ class ViewController: UIViewController,
 
     private var movieCollectionView: UICollectionView!
     private let titleLabel = UILabel()
-    private let viewModel = HomeViewModel()
-
+    var viewModel: HomeViewModelProtocol?
+    
+    init(viewModel: HomeViewModelProtocol?) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.05, alpha: 1)
-        viewModel.loadMovies()
         setupUI()
     }
 
@@ -81,7 +89,7 @@ class ViewController: UIViewController,
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        viewModel.numberOfMovies()
+        viewModel?.numberOfMovies() ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -92,14 +100,18 @@ class ViewController: UIViewController,
             for: indexPath
         ) as! HomeVCollectionViewCell
 
-        cell.setData(movie: viewModel.movie(at: indexPath.row))
+        if let movie = viewModel?.movie(at: indexPath.row) {
+            cell.setData(movie: movie)
+        }
         
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.movie(at: indexPath.row)
-        let detailsVC = MovieDetailsViewController(movie: movie)
-        navigationController?.pushViewController(detailsVC, animated: true)
+        if let movie = viewModel?.movie(at: indexPath.row){
+            let detailsVC = HomeViewController(movie: movie)
+            navigationController?.pushViewController(detailsVC, animated: true)
+        }
+        
     }
 
 }
