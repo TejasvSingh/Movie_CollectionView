@@ -77,11 +77,12 @@ class OverViewTableViewCell: UITableViewCell {
     }
 
     func configure(with movie: Movie) {
-        title.text = movie.name
-        if let poster = movie.posterImage {
-            img.image = UIImage(systemName: poster)
-        } else {
-            img.image = UIImage(systemName: "film")
+        title.text = movie.original_title
+        let full = Server.imageBasePath.rawValue + (movie.poster_path ?? "")
+        
+        Task {
+            await img.loadImage(url: full)
         }
+
     }
 }
