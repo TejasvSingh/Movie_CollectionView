@@ -62,9 +62,9 @@ class HomeVCollectionViewCell: UICollectionViewCell {
     }
 
     func setData(movie: Movie) {
-        titleLabel.text = movie.original_title ?? ""
+        titleLabel.text = movie.title ?? ""
         let base = "https://image.tmdb.org/t/p/w500"
-        let full = base + (movie.poster_path ?? "")
+        let full = base + (movie.posterImage ?? "")
         
         Task {
             await posterImage.loadImage(url: full)

@@ -15,10 +15,12 @@ class ViewController: UIViewController,
     
     private var movieCollectionView: UICollectionView!
     private let titleLabel = UILabel()
+    let toggleSwitch = UISwitch()
     var viewModel: HomeViewModelProtocol?
     let searchController = UISearchController(searchResultsController: nil)
     var filteredMovies : [Movie] = []
     var isSearching = false
+   
     
     
     init(viewModel: HomeViewModelProtocol?) {
@@ -57,6 +59,8 @@ class ViewController: UIViewController,
         titleLabel.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        toggleSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+        toggleSwitch.translatesAutoresizingMaskIntoConstraints = false
         
         let layout = UICollectionViewFlowLayout()
         
@@ -87,12 +91,16 @@ class ViewController: UIViewController,
         
         view.addSubview(titleLabel)
         view.addSubview(movieCollectionView)
+        view.addSubview(toggleSwitch)
         
         NSLayoutConstraint.activate([
             
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            toggleSwitch.topAnchor.constraint(equalTo: titleLabel.topAnchor),
+            toggleSwitch.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: -56),
             
             movieCollectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
             movieCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -155,4 +163,18 @@ class ViewController: UIViewController,
         filteredMovies = viewModel?.searchMovies(by: searchText) ?? []
         movieCollectionView.reloadData()
     }
-}
+    
+    @objc func switchChanged(_ sender: UISwitch){
+        let service: NetworkManagerProtocol = sender.isOn ? NetworkManager() : MockNetworkService()
+        viewModel = HomeViewModel(service: service)
+            Task {
+                await viewModel?.getDataFromServer()
+                print("Movies count:", viewModel?.numberOfMovies() ?? -1)
+                print("Data fetched successfully")
+                await MainActor.run {
+                    self.movieCollectionView.reloadData()
+                }
+            }
+        }
+    }
+

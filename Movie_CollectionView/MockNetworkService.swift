@@ -1,13 +1,9 @@
 //
-//  MockData.swift
+//  MockNetworkService.swift
 //  Movie_CollectionView
 //
-//  Created by Tejasv Singh on 2/10/26.
+//  Created by Tejasv Singh on 2/17/26.
 //
-
-
-import Foundation
-@testable import Movie_CollectionView
 
 class MockNetworkService: NetworkManagerProtocol {
     

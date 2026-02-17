@@ -34,6 +34,6 @@ class UpdatesTableViewCell: UITableViewCell {
         ])
     }
     func configure(with movie: Movie) {
-        descriptionLabel.text = movie.overview
+        descriptionLabel.text = movie.description
     }
 }

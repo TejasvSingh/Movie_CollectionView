@@ -34,7 +34,7 @@ class HomeViewModel: HomeViewModelProtocol {
             guard !title.isEmpty else { return movies }
 
             return movies.filter {
-                $0.original_title!
+                $0.title!
                     .lowercased()
                     .contains(title.lowercased())
             }

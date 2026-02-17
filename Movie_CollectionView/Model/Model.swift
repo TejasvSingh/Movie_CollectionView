@@ -9,9 +9,17 @@ struct MovieResponse: Decodable {
     let results: [Movie]
 }
 
-struct Movie : Decodable{
-    var original_title: String?
-    var overview: String?
-    var release_date: String?
-    var poster_path: String?
+struct Movie : Decodable {
+    var title: String?
+    var description: String?
+    var releaseDate: String?
+    var posterImage: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case title = "original_title"
+        case description = "overview"
+        case releaseDate = "release_date"
+        case posterImage = "poster_path"
+    }
 }
+ 

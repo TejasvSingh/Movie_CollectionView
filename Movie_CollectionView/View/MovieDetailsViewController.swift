@@ -100,11 +100,11 @@ class MovieDetailsViewController: UIViewController {
 
  
     private func configureData() {
-        titleLabel.text = movie.original_title ?? "Unknown Title"
-        releaseDateLabel.text = "Release Date: \(movie.release_date ?? "N/A")"
-        descriptionLabel.text = movie.overview ?? "No description available"
+        titleLabel.text = movie.title ?? "Unknown Title"
+        releaseDateLabel.text = "Release Date: \(movie.releaseDate ?? "N/A")"
+        descriptionLabel.text = movie.description ?? "No description available"
 
-        let full = Server.imageBasePath.rawValue + (movie.poster_path ?? "")
+        let full = Server.imageBasePath.rawValue + (movie.posterImage ?? "")
         
         Task {
             await posterImageView.loadImage(url: full)
